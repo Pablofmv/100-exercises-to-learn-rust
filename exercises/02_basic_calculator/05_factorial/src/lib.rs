@@ -10,6 +10,21 @@
 //
 // Use only what you learned! No loops yet, so you'll have to use recursion!
 
+fn factorial(n:i128) -> i128 {
+    if n < 0 {
+        panic!("Value must be positive!")
+    }
+    else if n == 0 {
+        1
+    }
+    else if n == 1 {
+        1
+    }
+    else {
+        n * factorial(n - 1)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::factorial;
