@@ -11,7 +11,7 @@ struct Order {
 }
 
 impl Order{
-    fn is_available(self) -> bool {
+    fn is_available(&self) -> bool {
         if self.quantity > 0 {
             return true;
         } else {
