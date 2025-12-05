@@ -47,6 +47,7 @@ impl Ticket {
             title: title.to_string(),
             description: description.to_string(),
             status: status.to_string()
+        
         }
 
 
