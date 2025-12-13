@@ -45,6 +45,18 @@ impl Ticket {
     pub fn status(&self) -> &String {
         &self.status
     }
+
+    pub fn set_title(&mut self, new_title: String) {
+        if new_title.is_empty() {
+            panic!("Title cannot be empty");
+        }
+        if new_title.len() > 50 {
+            panic!("Title cannot be longer than 50 bytes");
+        }
+
+        self.title = new_title
+    }
+
 }
 
 #[cfg(test)]
