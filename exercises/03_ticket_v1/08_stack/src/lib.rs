@@ -18,4 +18,6 @@ mod tests {
     fn bool_size() {
         assert_eq!(size_of::<bool>(), 1);
     }
+
+    
 }
