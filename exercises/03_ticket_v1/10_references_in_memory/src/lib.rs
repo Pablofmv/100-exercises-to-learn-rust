@@ -24,5 +24,6 @@ mod tests {
     #[test]
     fn ticket_ref_size() {
         assert_eq!(size_of::<&Ticket>(), 8);
+        
     }
 }
