@@ -4,4 +4,8 @@ pub fn example() {
     //
     // TODO: Comment out the following line and move on to the next exercise.
     std::mem::size_of::<str>();
+
+
+    
 }
+// solution: we can't compute the size of DST like str.
