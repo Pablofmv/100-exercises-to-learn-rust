@@ -13,4 +13,5 @@ impl From<u32> for WrappingU32 {
 fn example() {
     let wrapping: WrappingU32 = 42.into();
     let wrapping = WrappingU32::from(42);
+    // solution
 }
