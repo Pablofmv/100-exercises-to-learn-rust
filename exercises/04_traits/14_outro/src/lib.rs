@@ -11,79 +11,123 @@
 
 use std::ops::Add;
 
-#[derive(Copy, Clone, Debug, PartialEq)]
-pub struct SaturatingU16 {
-    pub inner: u16
-}
-
-impl From<u16> for SaturatingU16 {
-    fn from(value: u16) -> Self {
-        SaturatingU16 {
-            inner: value
-        }
-    }
-}
-
-impl From<u8> for SaturatingU16 {
-    fn from(value: u8) -> Self {
-        SaturatingU16 {
-            inner: value as u16
-        }
-    }
-}
-
-impl From<&u16> for SaturatingU16 {
-    fn from(value: &u16) -> Self {
-        SaturatingU16 {
-            inner: *value as u16
-        }
-    }
-}
-
-impl From<&u8> for SaturatingU16 {
-    fn from(value: &u8) -> Self {
-        SaturatingU16 {
-            inner: *value as u16
-        }
-    }
-}
-
 impl Add<SaturatingU16> for SaturatingU16 {
+
     type Output = SaturatingU16;
 
-    fn add (self, rhs: SaturatingU16) -> Self::Output {
-        SaturatingU16 {
-            inner: self.inner.saturating_add(rhs.inner)
+    fn add(self, rhs:SaturatingU16) -> Self::Output {
+
+        Self {
+            value :  self.value.saturating_add(rhs.value)
         }
-    }
-
-}
-
-impl Add<u16> for SaturatingU16 {
-    type Output = SaturatingU16;
-
-    fn add (self, rhs: u16) -> Self::Output {
-        SaturatingU16 {
-            inner: self.inner.saturating_add(rhs)
-        }
+       
     }
 }
 
 impl Add<&SaturatingU16> for SaturatingU16 {
     type Output = SaturatingU16;
 
-    fn add (self, rhs: &SaturatingU16) -> Self::Output {
-        SaturatingU16 {
-            inner: self.inner.saturating_add(rhs.inner)
+    fn add(self, rhs: &SaturatingU16) -> Self::Output {
+        Self {
+            value: self.value.saturating_add(rhs.value)
+        }
+    }
+}
+
+impl Add<u16> for SaturatingU16 {
+
+    type Output = SaturatingU16;
+
+    fn add(self, rhs: u16) -> Self::Output {
+
+        Self {
+            value :  self.value.saturating_add(rhs)
+        }
+
+    }
+
+}
+
+impl Add<&u16> for SaturatingU16 {
+    type Output = SaturatingU16;
+
+    fn add(self, rhs: &u16) -> Self::Output {
+
+        Self {
+            value : self.value.saturating_add(*rhs)
+        }
+
+    }
+}
+
+impl PartialEq<u16> for SaturatingU16 {
+
+    fn eq(&self, other: &u16) -> bool {
+        self.value == *other
+    }
+}
+
+
+#[derive(PartialEq, Copy, Clone, Debug)]
+pub struct SaturatingU16 {
+    pub value: u16
+}
+
+impl SaturatingU16 {
+
+    pub fn new(x: u16) -> Self {
+
+        Self {
+            value : x
+        }
+
+    }
+}
+
+
+
+
+impl From<u16> for SaturatingU16 {
+
+    fn from(x: u16) -> Self {
+
+        Self {
+            value : x
         }
     }
 
 }
 
+impl From<&u16> for SaturatingU16 {
 
+    fn from(x: &u16) -> Self {
 
-impl PartialEq<u16> for SaturatingU16 {
-    fn eq(&self, other:&u16) -> bool {
-        self.inner == *other
+        Self {
+            value : *x
+        }
+    }
+
+}
+
+impl From<u8> for SaturatingU16 {
+
+    fn from(x: u8) -> Self {
+
+        Self {
+            value: x as u16
+        }
+
     }
 }
+
+impl From<&u8> for SaturatingU16 {
+
+    fn from(x: &u8) -> Self {
+
+        Self {
+            value: *x as u16
+        }
+
+    }
+}
+
