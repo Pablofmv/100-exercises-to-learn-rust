@@ -9,25 +9,34 @@
 //
 // Tests are located in the `tests` folder—pay attention to the visibility of your types and methods.
 
+
 use std::ops::Add;
+
+
+impl PartialEq<u16> for SaturatingU16 {
+
+    fn eq(&self, other: &u16) -> bool {
+        self.value == *other
+    }
+}
 
 impl Add<SaturatingU16> for SaturatingU16 {
 
     type Output = SaturatingU16;
 
     fn add(self, rhs:SaturatingU16) -> Self::Output {
-
         Self {
-            value :  self.value.saturating_add(rhs.value)
+            value : self.value.saturating_add(rhs.value)
         }
-       
     }
 }
 
 impl Add<&SaturatingU16> for SaturatingU16 {
+
     type Output = SaturatingU16;
 
     fn add(self, rhs: &SaturatingU16) -> Self::Output {
+
         Self {
             value: self.value.saturating_add(rhs.value)
         }
@@ -38,75 +47,41 @@ impl Add<u16> for SaturatingU16 {
 
     type Output = SaturatingU16;
 
-    fn add(self, rhs: u16) -> Self::Output {
-
+    fn add(self, rhs:u16) -> Self::Output {
         Self {
-            value :  self.value.saturating_add(rhs)
+            value : self.value.saturating_add(rhs)
         }
-
     }
 
 }
 
 impl Add<&u16> for SaturatingU16 {
+
     type Output = SaturatingU16;
 
     fn add(self, rhs: &u16) -> Self::Output {
-
         Self {
             value : self.value.saturating_add(*rhs)
         }
-
-    }
-}
-
-impl PartialEq<u16> for SaturatingU16 {
-
-    fn eq(&self, other: &u16) -> bool {
-        self.value == *other
     }
 }
 
 
-#[derive(PartialEq, Copy, Clone, Debug)]
+
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct SaturatingU16 {
-    pub value: u16
+    pub value: u16,
 }
-
-impl SaturatingU16 {
-
-    pub fn new(x: u16) -> Self {
-
-        Self {
-            value : x
-        }
-
-    }
-}
-
-
-
 
 impl From<u16> for SaturatingU16 {
 
     fn from(x: u16) -> Self {
 
         Self {
-            value : x
+            value: x
         }
+
     }
-
-}
-
-impl From<&u16> for SaturatingU16 {
-
-    fn from(x: &u16) -> Self {
-
-        Self {
-            value : *x
-        }
-    }
-
 }
 
 impl From<u8> for SaturatingU16 {
@@ -115,6 +90,17 @@ impl From<u8> for SaturatingU16 {
 
         Self {
             value: x as u16
+        }
+
+    }
+}
+
+impl From<&u16> for SaturatingU16 {
+
+    fn from(x: &u16) -> Self {
+
+        Self {
+            value: *x
         }
 
     }
@@ -129,5 +115,5 @@ impl From<&u8> for SaturatingU16 {
         }
 
     }
-}
 
+}
