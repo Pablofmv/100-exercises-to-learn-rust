@@ -8,7 +8,7 @@ pub fn factorial(n: u32) -> u32 {
     let mut res: u32 = 1;
     let mut m: u32 = n;
     
-    while m > 1 {
+    while m > 0 {
         res = res * m;
         m = m -1;
     }
