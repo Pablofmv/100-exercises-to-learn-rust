@@ -1,3 +1,6 @@
+
+use std::str::FromStr;
+
 #[derive(Debug, PartialEq, Clone)]
 pub enum Status {
     ToDo,
@@ -9,6 +12,14 @@ impl TryFrom<String> for Status {
     type Error = ParseStatusError;
 
     fn try_from(value: String) -> Result<Self, Self::Error> {
+        Status::from_str(&value)
+    }
+}
+
+impl FromStr for Status {
+    type Err = ParseStatusError;
+
+    fn from_str(value: &str) -> Result<Self, Self::Err> {
         let value = value.to_lowercase();
         match value.as_str() {
             "todo" => Ok(Status::ToDo),
