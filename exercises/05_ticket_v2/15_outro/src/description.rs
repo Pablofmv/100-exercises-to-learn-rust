@@ -2,7 +2,42 @@
 //   enforcing that the description is not empty and is not longer than 500 bytes.
 //   Implement the traits required to make the tests pass too.
 
+#[derive(Debug, PartialEq, Eq)]
 pub struct TicketDescription(String);
+
+#[derive(Debug, PartialEq, Eq)]
+pub enum TicketDescriptionError {
+    TooLong,
+}
+
+impl std::fmt::Display for TicketDescriptionError {
+    fn fmt(&self, f:&mut: std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            TicketDescriptionError::TooLong => write!(f,"The description cannot be longer than 500 bytes")
+        }
+    }
+}
+
+
+
+impl TryFrom<&str> for TicketDescription {
+    type Error = TicketDescriptionError;
+
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
+        if len(value) > 50 {
+            return Err(TicketDescriptionError::TooLong);
+        }
+        Ok(Self(value.to_string()))
+    }
+}
+
+impl TryFrom<String> for TicketDescription {
+    type Error = TicketDescriptionError;
+    
+    fn try_from(value: String) -> Result<Self, Self::Error> {
+        Self::try_from(value.as_str())
+    }
+}
 
 #[cfg(test)]
 mod tests {
