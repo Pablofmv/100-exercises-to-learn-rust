@@ -2,7 +2,7 @@
 //   enforcing that the title is not empty and is not longer than 50 bytes.
 //   Implement the traits required to make the tests pass too.
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 pub struct TicketTitle(String);
 
 #[derive(Debug, PartialEq, Eq)]
@@ -12,7 +12,7 @@ pub enum TicketTitleError {
 }
 
 impl std::fmt::Display for TicketTitleError {
-    fn fmt(&self, f: &mut: std::fmt::Fomatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             TicketTitleError::Empty => write!(f,"The title cannot be empty"),
             TicketTitleError::TooLong => write!(f,"The title cannot be longer than 50 bytes")
@@ -24,12 +24,12 @@ impl std::fmt::Display for TicketTitleError {
 impl TryFrom<&str> for TicketTitle {
     type Error = TicketTitleError;
 
-    fn try_from(value: &str) -> Result <Self, Self::Error> {
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
         if value.is_empty() {
             return Err(TicketTitleError::Empty);
         }
 
-        if len(value) > 50 {
+        if value.len() > 50 {
             return Err(TicketTitleError::TooLong);
         }
 
