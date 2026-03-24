@@ -18,22 +18,11 @@ pub fn fibonacci(n: u32) -> u32 {
     
     let mut fib_vector = vec![0,1];
 
-    if n == 0 {
-        return fib_vector[0]
+    for i in 2..n + 1 {
+        fib_vector.push(fib_vector[(i-2) as usize] + fib_vector[(i -1) as usize])
     }
-    else if n == 1 {
-        return fib_vector[1]
-    } else {
-        let mut m = n;
-        let mut idx = 2;
-        while m > 1 {
-            fib_vector.push(fib_vector[idx-1] + fib_vector[idx-2]);
-            m = m - 1;
-            idx = idx + 1;
-        }
 
-        return fib_vector[n as usize]
-    }
+    return fib_vector[n as usize]
 
 }
 
