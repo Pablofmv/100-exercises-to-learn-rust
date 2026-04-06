@@ -22,6 +22,17 @@ pub enum Status {
 }
 
 impl TicketStore {
+
+    pub fn to_dos(&self) -> Vec<&Ticket> {
+        self.tickets
+        .iter()
+        .filter(|t| t.status == Status::ToDo)
+        .collect()
+    }
+
+}
+
+impl TicketStore {
     pub fn new() -> Self {
         Self {
             tickets: Vec::new(),
