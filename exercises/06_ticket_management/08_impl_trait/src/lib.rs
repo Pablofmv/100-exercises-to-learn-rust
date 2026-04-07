@@ -1,5 +1,5 @@
 // TODO: Implement the `in_progress` method. It must return an iterator over the tickets in
-//  `TicketStore` with status set to `Status::InProgress`.
+//  `TicketStore` with status set to `Status::`.
 use ticket_fields::{TicketDescription, TicketTitle};
 
 #[derive(Clone)]
@@ -19,6 +19,12 @@ pub enum Status {
     ToDo,
     InProgress,
     Done,
+}
+
+impl TicketStore {
+    pub fn in_progress(&self) -> impl Iterator<Item = &Ticket> {
+        self.tickets.iter().filter(|t| t.status == Status::InProgress)
+    }
 }
 
 impl TicketStore {
