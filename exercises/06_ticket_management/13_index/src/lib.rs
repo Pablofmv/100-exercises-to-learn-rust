@@ -1,6 +1,7 @@
 // TODO: Implement `Index<&TicketId>` and `Index<TicketId>` for `TicketStore`.
 
 use ticket_fields::{TicketDescription, TicketTitle};
+use std::ops::Index;
 
 #[derive(Clone)]
 pub struct TicketStore {
@@ -30,6 +31,22 @@ pub enum Status {
     ToDo,
     InProgress,
     Done,
+}
+
+impl Index<TicketId> for TicketStore {
+    type Output = Ticket;
+
+    fn index(&self, id: TicketId) -> &Self::Output {
+        self.get(id).unwrap()
+    }
+}
+
+impl Index<&TicketId> for TicketStore {
+    type Output = Ticket;
+
+    fn index(&self, id: &TicketId) -> &Self::Output {
+        self.get(*id).unwrap()
+    }
 }
 
 impl TicketStore {
