@@ -2,8 +2,22 @@
 //  and compute the sum of each half in a separate thread.
 //  Don't perform any heap allocation. Don't leak any memory.
 
+use std::thread;
+
 pub fn sum(v: Vec<i32>) -> i32 {
-    todo!()
+    let m = v.len() / 2;
+
+    thread::scope(
+        |s| {
+            let left = &v[..m];
+            let right = &v[m..];
+
+            let h1 = s.spawn(|| left.iter().sum::<i32>());
+            let h2 = s.spawn(|| right.iter().sum::<i32>());
+
+            h1.join().unwrap() + h2.join().unwrap()
+        }
+    )
 }
 
 #[cfg(test)]
