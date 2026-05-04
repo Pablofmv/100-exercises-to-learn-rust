@@ -49,3 +49,48 @@ mod tests {
         assert_eq!(sum(vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 10]), 55);
     }
 }
+
+
+
+struct User {
+    id: i32,
+    name: String,
+    email: Option<String>, 
+}
+
+enum AppError {
+    NotFound,
+    DbError,
+    IncorrrectInput
+}
+
+pub fn validate(id: i32) -> Result<(),AppError> {
+
+    if id <= 0 {
+        return Err(AppError::IncorrrectInput);
+    }
+
+    Ok(())
+}
+
+pub async fn get_user(pool: &PgPool, user_id: i32) -> Result<User, AppError> {
+    
+    validate(user_id)?;
+
+    let user = sqlx::query_as!(
+        User,
+        "SELECT id, name, email FROM users WHERE id = $1",
+        user_id
+    )
+    .fetch_optional(pool)
+    .await
+    .map_err(|e| {
+        tracing::error!(error = ?e, "DB Error");
+        AppError::DbError
+    })?;
+
+    match user {
+        Some(user) => Ok(user),
+        None => Err(AppError::NotFound),
+    }
+}

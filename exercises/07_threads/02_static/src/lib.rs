@@ -49,3 +49,43 @@ mod tests {
         assert_eq!(sum(&ARRAY), 55);
     }
 }
+
+
+use std::env;
+
+#[derive(Debug)]
+enum AppError {
+    ConfigMissing(&'static str),
+    InvalidConfig(&'static str),
+}
+
+#[derive(Debug)]
+struct AppConfig {
+    db_url: String,
+    port: u16,
+    debug: bool,
+}
+
+fn load_config() -> Result<AppConfig, AppError> {
+    
+    let db_url = env::var("DATABASE_URL").map_err(|_|AppError::ConfigMissing("DATABASE_URL"))?;
+
+    let port : u16 = env::var("PORT").unwrap_or_else(|_| "3000".to_string()).parse().map_err(|_| AppError::InvalidConfig("PORT"))?;
+
+    let debug : bool = env::var("DEBUG").unwrap_or_else(|_| "false".to_string()).parse().map_err(|_| AppError::InvalidConfig("DEBUG"))?;
+
+    if db_url.is_empty() {
+        return Err(AppError::InvalidConfig("DATABASE_URL"))
+    };
+
+    if port == 0 {
+        return Err(AppError::InvalidConfig("PORT"))
+    }
+
+    Ok( AppConfig{
+        db_url,
+        port,
+        debug,
+    })
+
+}

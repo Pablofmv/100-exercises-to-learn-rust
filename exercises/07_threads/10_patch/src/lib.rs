@@ -124,3 +124,41 @@ pub fn server(receiver: Receiver<Command>) {
         }
     }
 }
+
+
+------
+
+async fn worker(
+    mut job_rx: tokio::sync::mpsc::Receiver<String>,
+    mut shutdown_rx: tokio::sync::mpsc::Receiver<()>,
+)
+
+use tokio::sync::mpsc;
+use tokio::time::{sleep, Duration};
+
+async fn worker(
+    mut job_rx: mpsc::Receiver<String>,
+    mut shutdown_rx: mpsc::Receiver<()>,
+) {
+    loop {
+
+        tokio::select!{
+
+            biased;
+
+            _ = shutdown_rx.recv() => {
+                println!("shuttin down");
+                break;
+            },
+
+            Some(job) = job_rx.recv() => handle(job),
+
+            _ = sleep(Duration::from_secs(2)) => {
+                println!("heartbeat");
+            },
+
+            else => break,
+            
+        }
+    }
+}

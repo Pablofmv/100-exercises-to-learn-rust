@@ -82,3 +82,59 @@ pub fn server(receiver: Receiver<Command>) {
         }
     }
 }
+
+
+use std::sync::mpsc::{self, SyncSender, Receiver};
+use std::thread;
+
+#[derive(Debug)]
+enum Job {
+    SendEmail(String),
+    ProcessOrder(u32),
+}
+
+#[derive(Clone)]
+struct JobClient {
+    sender: SyncSender<Job>,
+}
+
+impl JobClient {
+    fn submit_job(&self, job: Job) -> Result<(), ()> {
+        
+        let (tx, rx) = std::sync::mpsc::channel();
+
+        self.sender.send(job).map_err(|_| ())?;
+
+        Ok(())
+    }
+}
+
+fn worker(rx: Receiver<Job>) {
+    while let Ok(job) = rx.recv() {
+        match job {
+            Job::SendEmail(email) => {
+                println!("Sending email to {}", email);
+            }
+            Job::ProcessOrder(id) => {
+                println!("Processing order {}", id);
+            }
+        }
+    }
+}
+
+fn launch() -> JobClient {
+    let (tx, rx) = mpsc::sync_channel(5);
+
+    thread::spawn(move || worker(rx));
+
+    JobClient { sender: tx }
+}
+
+fn main() {
+    let client = launch();
+
+    client.submit_job(Job::SendEmail("a@test.com".into())).unwrap();
+    client.submit_job(Job::ProcessOrder(42)).unwrap();
+
+    drop(client);
+}

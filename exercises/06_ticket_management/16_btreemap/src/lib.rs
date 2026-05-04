@@ -143,3 +143,78 @@ mod tests {
         assert_eq!(ids, sorted_ids);
     }
 }
+
+
+
+
+async fn delete_user(pool: &PgPool,user_id: i32) -> Result<(), sqlx::Error> {
+    let mut tx = pool.begin().await?;
+
+    let res1 = sqlx::query!(
+        "DELETE FROM orders WHERE user_id = $1",
+        user_id
+    )
+    .execute(&mut *tx)
+    .await?;
+
+    let res2 = sqlx::query!(
+        "DELETE FROM users WHERE id = $1",
+        user_id
+    )
+    .execute(&mut *tx)
+    .await?;
+
+    if res2.rows_affected() == 0 {
+        return Err(sqlx::Error::RowNotFound)
+    }
+
+    tx.commit().await?;
+
+    Ok(())
+
+}
+
+#[derive(Debug, Error)]
+pub enum AppError {
+    #[error("Insuficient Balance")]
+    InsuficientBalance,
+
+    #[error("Account Not Found")]
+    AccountNotFound,
+
+    #[error("Database Error")]
+    DatabaseError(#[from] sqlx::Error),
+}
+
+async fn transfer_50(pool: &PgPool,from_id: i32,to_id: i32,) -> Result<(), AppError> {
+    let mut tx = pool.begin().await?;
+
+    let res1 = sqlx::query!(
+        "UPDATE accounts SET balance = balance - 50 WHERE id = $1 AND balance >= 50",
+        from_id
+    )
+    .execute(&mut *tx)
+    .await
+    .map_err(|e|{
+        AppError::DatabaseError(e)
+    })?;
+
+    if res1.rows_affected() == 0 {
+        return Err(AppError::InsufficientBalance);
+    }
+
+    let res2 = sqlx::query!(
+        "UPDATE accounts SET balance = balance + 50 WHERE id = $1",
+        to_id
+    )
+    .execute(&mut *tx)
+    .await?;
+
+    if res2.rows_affected() == 0 {
+        return Err(AppError::AccountNotFound);
+    }
+
+    tx.commit().await?;
+
+    Ok(())
+}
