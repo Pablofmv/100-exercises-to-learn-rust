@@ -31,10 +31,8 @@ fn works() {
     let ticket_id2 = client2.join().unwrap();
 
     let reader = store.read().unwrap();
-
     let ticket1 = reader.get(ticket_id1).unwrap();
     assert_eq!(ticket_id1, ticket1.read().unwrap().id);
-
     let ticket2 = reader.get(ticket_id2).unwrap();
     assert_eq!(ticket_id2, ticket2.read().unwrap().id);
 }
